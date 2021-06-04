@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
+import admin from 'firebase-admin';
 // import MulterGoogleStorage from 'multer-google-storage';
 // import googleStorage from '@google-cloud/storage';
 // import Multer from 'multer';
@@ -42,6 +43,13 @@ export class AppController {
     }),
   )
   uploadFiles(@UploadedFile() files: Array<Express.Multer.File>) {
+    // admin.initializeApp({
+    //   credential: admin.credential.cert('../google-services.json'),
+    //   storageBucket: 'curbo-buyers-mobile-app-stage.appspot.com',
+    // });
+
+    // console.log(admin);
+
     console.log(files);
   }
 }

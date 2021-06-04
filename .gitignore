@@ -35,3 +35,6 @@ lerna-debug.log*
 
 # Envs
 *.env
+
+# Service
+google-services.json
