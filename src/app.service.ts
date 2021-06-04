@@ -7,8 +7,8 @@ export class AppService {
     return 'Hello World!';
   }
 
-  uploadFile(): Storage {
+  async uploadFile(imageBuffer: Buffer, fileName: string) {
     const storage = new Storage();
-    return storage;
+    return await storage.bucket('').upload(fileName, {});
   }
 }

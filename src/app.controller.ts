@@ -7,14 +7,18 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
-import admin from 'firebase-admin';
-// import MulterGoogleStorage from 'multer-google-storage';
+import * as admin from 'firebase-admin';
 // import googleStorage from '@google-cloud/storage';
 // import Multer from 'multer';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) {
+    admin.initializeApp({
+      credential: admin.credential.cert('./settings.json'),
+      storageBucket: 'curbo-buyers-mobile-app-stage.appspot.com',
+    });
+  }
 
   @Get()
   getHello(): string {
@@ -22,18 +26,48 @@ export class AppController {
   }
 
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('photo', {
-      limits: {
-        fileSize: 1000000,
-        files: 2,
-      },
-      dest: './uploads',
-    }),
-  )
+  @UseInterceptors(FileInterceptor('photo', {}))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
   }
+
+  // @Post('upload')
+  // @UseInterceptors(
+  //   FileInterceptor('photo', {
+  //     storage: new MulterGoogleStorage({
+  //       projectId: '',
+  //       keyFilename: path.join(__dirname, '../myfile.json'),
+  //       bucket: '',
+  //       file: (req, file, cb) => {
+  //         const fileNameSplit = file.originalname.split('.');
+  //         const fileExt = fileNameSplit.pop();
+  //         cb(null, `${Date.now()}.${fileExt}`);
+  //       },
+  //     }),
+  //   }),
+  // )
+  // uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  // }
+
+  // @Post('upload')
+  // @UseInterceptors(
+  //   FileInterceptor('photo', {
+  //     storage: new MulterGoogleStorage({
+  //       projectId: '',
+  //       bucket: '',
+  //       filename: () => {},
+  //     }),
+  //     limits: {
+  //       fileSize: 1000000,
+  //       files: 2,
+  //     },
+  //     dest: './uploads',
+  //   }),
+  // )
+  // uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //   console.log(file);
+  // }
 
   @Post('uploads')
   @UseInterceptors(
@@ -43,13 +77,6 @@ export class AppController {
     }),
   )
   uploadFiles(@UploadedFile() files: Array<Express.Multer.File>) {
-    // admin.initializeApp({
-    //   credential: admin.credential.cert('../google-services.json'),
-    //   storageBucket: 'curbo-buyers-mobile-app-stage.appspot.com',
-    // });
-
-    // console.log(admin);
-
     console.log(files);
   }
 }
