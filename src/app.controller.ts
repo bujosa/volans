@@ -20,10 +20,15 @@ export class AppController {
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('photo', {
+      limits: {
+        fileSize: 1000000,
+        files: 2,
+      },
       dest: './uploads',
     }),
   )
-  uploadSingle(@UploadedFile() file) {
+  uploadFile(@UploadedFile() file) {
     console.log(file);
+    return file.filename;
   }
 }

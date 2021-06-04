@@ -7,7 +7,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  uploadFile() {
+  uploadFile(): Storage {
     const storage = new Storage();
     return storage;
   }
