@@ -5,9 +5,11 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 // import MulterGoogleStorage from 'multer-google-storage';
+// import googleStorage from '@google-cloud/storage';
+// import Multer from 'multer';
 
 @Controller()
 export class AppController {
@@ -28,8 +30,18 @@ export class AppController {
       dest: './uploads',
     }),
   )
-  uploadFile(@UploadedFile() file) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
-    return file.filename;
+  }
+
+  @Post('uploads')
+  @UseInterceptors(
+    FilesInterceptor('photo', 3, {
+      dest: './uploads',
+      limits: { fileSize: 1000000 },
+    }),
+  )
+  uploadFiles(@UploadedFile() files: Array<Express.Multer.File>) {
+    console.log(files);
   }
 }
