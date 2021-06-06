@@ -7,7 +7,6 @@ export class AppService {
   constructor() {
     admin.initializeApp({
       credential: admin.credential.cert('./settings.json'),
-      storageBucket: 'curbo-buyers-mobile-app-stage.appspot.com',
     });
   }
   getHello(): string {
@@ -17,7 +16,9 @@ export class AppService {
   async uploadFile(file: Express.Multer.File) {
     console.log(file);
     const storage = admin.storage();
-    return await storage.bucket(process.env.BUCKET).upload('pictures').then();
+    const image = await storage.bucket(process.env.BUCKET).getFiles(); //.save(file.buffer);
+    console.log(image);
+    return image;
   }
 
   async uploadFiles(files: Array<Express.Multer.File>) {
