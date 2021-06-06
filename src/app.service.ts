@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Storage } from '@google-cloud/storage';
 import * as admin from 'firebase-admin';
+import { uploadFileFunction } from './helper/upload-file';
 
 @Injectable()
 export class AppService {
@@ -14,15 +14,8 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async uploadFile(file: Express.Multer.File) {
-    const bucket = admin.storage().bucket(process.env.BUCKET);
-    const fileName = `${Date.now()}.${file.originalname.split('.').pop()}`;
-    const blob = bucket.file(fileName);
-    const blobStream = blob.createWriteStream();
-    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-
-    await blobStream.end(file.buffer);
-    return publicUrl;
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    return await uploadFileFunction(admin.storage(), file);
   }
 
   async deleteFile(key: string) {
@@ -31,11 +24,12 @@ export class AppService {
     return file;
   }
 
-  async uploadFiles(files: Array<Express.Multer.File>) {
-    console.log(files[0]);
-    const storage = new Storage();
-    return await storage
-      .bucket(process.env.BUCKET)
-      .upload(files[0].filename, {});
+  async uploadFiles(files: Express.Multer.File[]): Promise<string[]> {
+    const urls = [];
+    console.log(files);
+    files.map(async (file: Express.Multer.File) => {
+      urls.push(await uploadFileFunction(admin.storage(), file));
+    });
+    return await urls;
   }
 }
