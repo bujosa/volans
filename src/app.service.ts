@@ -16,7 +16,15 @@ export class AppService {
 
   async uploadFile(file: Express.Multer.File) {
     console.log(file);
+    const storage = admin.storage();
+    return await storage.bucket(process.env.BUCKET).upload('pictures').then();
+  }
+
+  async uploadFiles(files: Array<Express.Multer.File>) {
+    console.log(files[0]);
     const storage = new Storage();
-    return await storage.bucket('').upload(file.filename, {});
+    return await storage
+      .bucket(process.env.BUCKET)
+      .upload(files[0].filename, {});
   }
 }

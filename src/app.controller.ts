@@ -21,7 +21,13 @@ export class AppController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('photo', {}))
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      limits: {
+        fileSize: 1000000,
+      },
+    }),
+  )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.appService.uploadFile(file);
   }
@@ -67,11 +73,10 @@ export class AppController {
   @Post('uploads')
   @UseInterceptors(
     FilesInterceptor('photo', 3, {
-      dest: './uploads',
-      limits: { fileSize: 1000000 },
+      limits: { fileSize: 2000000 },
     }),
   )
   uploadFiles(@UploadedFile() files: Array<Express.Multer.File>) {
-    console.log(files);
+    this.appService.uploadFiles(files);
   }
 }
