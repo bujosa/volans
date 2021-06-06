@@ -9,16 +9,26 @@ export class AppService {
       credential: admin.credential.cert('./settings.json'),
     });
   }
+
   getHello(): string {
     return 'Hello World!';
   }
 
   async uploadFile(file: Express.Multer.File) {
-    console.log(file);
-    const storage = admin.storage();
-    const image = await storage.bucket(process.env.BUCKET).getFiles(); //.save(file.buffer);
-    console.log(image);
-    return image;
+    const bucket = admin.storage().bucket(process.env.BUCKET);
+    const fileName = `${Date.now()}.${file.originalname.split('.').pop()}`;
+    const blob = bucket.file(fileName);
+    const blobStream = blob.createWriteStream();
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+
+    await blobStream.end(file.buffer);
+    return publicUrl;
+  }
+
+  async deleteFile(key: string) {
+    const bucket = admin.storage().bucket(process.env.BUCKET);
+    const file = bucket.file(key).delete();
+    return file;
   }
 
   async uploadFiles(files: Array<Express.Multer.File>) {

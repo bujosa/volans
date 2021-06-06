@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -30,6 +31,11 @@ export class AppController {
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.appService.uploadFile(file);
+  }
+
+  @Get('delete/:id')
+  async deleteFile(@Param() params) {
+    return await this.appService.deleteFile(params.id);
   }
 
   // @Post('upload')
