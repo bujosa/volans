@@ -7,18 +7,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
-import * as admin from 'firebase-admin';
+
 // import googleStorage from '@google-cloud/storage';
 // import Multer from 'multer';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {
-    admin.initializeApp({
-      credential: admin.credential.cert('./settings.json'),
-      storageBucket: 'curbo-buyers-mobile-app-stage.appspot.com',
-    });
-  }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   getHello(): string {
@@ -28,7 +23,7 @@ export class AppController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('photo', {}))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+    return this.appService.uploadFile(file);
   }
 
   // @Post('upload')
