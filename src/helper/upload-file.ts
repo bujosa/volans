@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { storage } from 'firebase-admin';
 
-export const uploadFileFunction = async (
+export const uploadFileHelper = async (
   storage: storage.Storage,
   file: Express.Multer.File,
 ) => {
