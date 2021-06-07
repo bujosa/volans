@@ -10,10 +10,6 @@ export class AppService {
     });
   }
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   async uploadFile(file: Express.Multer.File): Promise<string> {
     return await uploadFileHelper(admin.storage(), file);
   }

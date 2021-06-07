@@ -14,11 +14,6 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('photo', {
@@ -38,7 +33,7 @@ export class AppController {
 
   @Post('uploads')
   @UseInterceptors(
-    FilesInterceptor('photo', null, {
+    FilesInterceptor('photos', null, {
       limits: { fileSize: 2000000 },
     }),
   )
