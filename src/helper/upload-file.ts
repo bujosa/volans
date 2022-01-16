@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { storage } from 'firebase-admin';
 import { v4 as uuid } from 'uuid';
 
